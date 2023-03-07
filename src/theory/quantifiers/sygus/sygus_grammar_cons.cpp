@@ -1050,6 +1050,7 @@ void CegGrammarConstructor::mkSygusDefaultGrammar(
     }
 
     // always add ITE
+    /*
     Kind k = ITE;
     Trace("sygus-grammar-def") << "...add for " << k << std::endl;
     std::vector<TypeNode> cargsIte;
@@ -1057,6 +1058,7 @@ void CegGrammarConstructor::mkSygusDefaultGrammar(
     cargsIte.push_back(unres_t);
     cargsIte.push_back(unres_t);
     sdts[i].addConstructor(k, cargsIte);
+    */
   }
   std::map<TypeNode, std::pair<unsigned, bool>>::iterator itgat;
   // initialize the datatypes (except for the last one, reserved for Bool)
@@ -1271,11 +1273,13 @@ void CegGrammarConstructor::mkSygusDefaultGrammar(
       sdts[iat].d_sdt.addConstructor(ADD, cargsPlus);
     }
     // add the ITE, regardless of sum-of-monomials vs polynomial
+    /*
     std::vector<TypeNode> cargsIte;
     cargsIte.push_back(unres_bt);
     cargsIte.push_back(unres_types[iat]);
     cargsIte.push_back(unres_types[iat]);
     sdts[iat].d_sdt.addConstructor(ITE, cargsIte);
+    */
     sdts[iat].d_sdt.initializeDatatype(types[i], bvl, true, true);
     Trace("sygus-grammar-def")
         << "...built datatype " << sdts[iat].d_sdt.getDatatype() << std::endl;
@@ -1458,7 +1462,7 @@ void CegGrammarConstructor::mkSygusDefaultGrammar(
         cargs.push_back(unres_bt);
         if (k == ITE)
         {
-          cargs.push_back(unres_bt);
+          continue;
         }
       }
       sdtBool.addConstructor(k, cargs);
@@ -1491,13 +1495,13 @@ TypeNode CegGrammarConstructor::mkSygusDefaultType(
     std::unordered_set<Node>& term_irrelevant)
 {
   NodeManager* nm = NodeManager::currentNM();
-  Trace("sygus-grammar-def") << "*** Make sygus default type " << range << ", make datatypes..." << std::endl;
-  for (std::map<TypeNode, std::unordered_set<Node>>::iterator it =
-           extra_cons.begin();
-       it != extra_cons.end();
-       ++it)
+  if (TraceIsOn("sygus-grammar-def"))
   {
-    Trace("sygus-grammar-def") << "    ...using " << it->second.size() << " extra constants for " << it->first << std::endl;
+    Trace("sygus-grammar-def") << "*** Make sygus default type " << range << ", make datatypes..." << std::endl;
+    for (std::pair<const TypeNode, std::unordered_set<Node>>& ec : extra_cons)
+    {
+      Trace("sygus-grammar-def") << "    ...using " << ec.second.size() << " extra constants for " << ec.first << std::endl;
+    }
   }
   // TODO #1935 ITEs are added to Boolean grammars so that we can infer
   // unification strategies. We can do away with this if we can infer
