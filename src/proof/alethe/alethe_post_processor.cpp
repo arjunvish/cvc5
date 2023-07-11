@@ -432,12 +432,131 @@ bool AletheProofPostprocessCallback::update(Node res,
     }
     case PfRule::EVALUATE:
     {
-      return addAletheStep(AletheRule::ALL_SIMPLIFY,
-                           res,
-                           nm->mkNode(kind::SEXPR, d_cl, res),
-                           children,
-                           {nm->mkBoundVar("evaluate", nm->sExprType())},
-                           *cdp);
+      // if operator is in one of the SIMPLIFY rules of Alethe, use that, otherwise fall in to ALL_SIMPLIFY
+      Kind k = res[0].getKind();
+      switch (k)
+      {
+        case kind::ITE:
+        {
+          return addAletheStep(AletheRule::ITE_SIMPLIFY,
+                               res,
+                               nm->mkNode(kind::SEXPR, d_cl, res),
+                               {},
+                               {},
+                               *cdp);
+        }
+        case kind::EQUAL:
+        {
+          return addAletheStep(AletheRule::EQ_SIMPLIFY,
+                               res,
+                               nm->mkNode(kind::SEXPR, d_cl, res),
+                               {},
+                               {},
+                               *cdp);
+        }
+        case kind::AND:
+        {
+          return addAletheStep(AletheRule::AND_SIMPLIFY,
+                               res,
+                               nm->mkNode(kind::SEXPR, d_cl, res),
+                               {},
+                               {},
+                               *cdp);
+        }
+        case kind::OR:
+        {
+          return addAletheStep(AletheRule::OR_SIMPLIFY,
+                               res,
+                               nm->mkNode(kind::SEXPR, d_cl, res),
+                               {},
+                               {},
+                               *cdp);
+        }
+        case kind::NOT:
+        {
+          return addAletheStep(AletheRule::NOT_SIMPLIFY,
+                               res,
+                               nm->mkNode(kind::SEXPR, d_cl, res),
+                               {},
+                               {},
+                               *cdp);
+        }
+        case kind::IMPLIES:
+        {
+          return addAletheStep(AletheRule::IMPLIES_SIMPLIFY,
+                               res,
+                               nm->mkNode(kind::SEXPR, d_cl, res),
+                               {},
+                               {},
+                               *cdp);
+        }
+        case kind::DIVISION:
+        {
+          return addAletheStep(AletheRule::DIV_SIMPLIFY,
+                               res,
+                               nm->mkNode(kind::SEXPR, d_cl, res),
+                               {},
+                               {},
+                               *cdp);
+        }
+        case kind::MULT:
+        {
+          return addAletheStep(AletheRule::PROD_SIMPLIFY,
+                               res,
+                               nm->mkNode(kind::SEXPR, d_cl, res),
+                               {},
+                               {},
+                               *cdp);
+        }
+        case kind::NEG:
+        {
+          return addAletheStep(AletheRule::UNARY_MINUS_SIMPLIFY,
+                               res,
+                               nm->mkNode(kind::SEXPR, d_cl, res),
+                               {},
+                               {},
+                               *cdp);
+        }
+        case kind::SUB:
+        {
+          return addAletheStep(AletheRule::MINUS_SIMPLIFY,
+                               res,
+                               nm->mkNode(kind::SEXPR, d_cl, res),
+                               {},
+                               {},
+                               *cdp);
+        }
+        case kind::ADD:
+        {
+          return addAletheStep(AletheRule::SUM_SIMPLIFY,
+                               res,
+                               nm->mkNode(kind::SEXPR, d_cl, res),
+                               {},
+                               {},
+                               *cdp);
+        }
+        case kind::LT:
+        case kind::GT:
+        case kind::LEQ:
+        case kind::GEQ:
+        {
+          return addAletheStep(AletheRule::COMP_SIMPLIFY,
+                               res,
+                               nm->mkNode(kind::SEXPR, d_cl, res),
+                               {},
+                               {},
+                               *cdp);
+        }
+        default:
+        {
+          return addAletheStep(AletheRule::ALL_SIMPLIFY,
+                               res,
+                               nm->mkNode(kind::SEXPR, d_cl, res),
+                               children,
+                               {nm->mkBoundVar("evaluate", nm->sExprType())},
+                               *cdp);
+        }
+      }
     }
     case PfRule::THEORY_REWRITE:
     {
