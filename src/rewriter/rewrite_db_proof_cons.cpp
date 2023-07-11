@@ -848,7 +848,7 @@ Node RewriteDbProofCons::doEvaluate(Node n)
   {
     return itv->second;
   }
-  Node nev = nev.getType().isBoolean()? nev : d_eval.eval(n, {}, {});
+  Node nev = d_eval.eval(n, {}, {});
   d_evalCache[n] = nev;
   return nev;
 }
