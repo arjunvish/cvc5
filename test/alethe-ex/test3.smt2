@@ -1,0 +1,5 @@
+(set-logic UFLIA)
+(declare-fun op_0 () Bool)
+(assert (and op_0 (not op_0)))
+(check-sat)
+(exit)

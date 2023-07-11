@@ -1,0 +1,7 @@
+(set-logic UFLIA)
+(declare-fun op_1 () Bool)
+(declare-fun op_0 () Bool)
+(declare-fun op_2 () Bool)
+(assert (and (or op_0 op_2 op_1) (or (not op_0) (not op_2) (not op_1)) (or (not op_0) op_2) (or (not op_2) op_1) (or (not op_1) op_0)))
+(check-sat)
+(exit)
